@@ -14,7 +14,17 @@ var shoppingCartTotal: Double = 0
 func addItemToCart(item: Item) {
     shoppingCart = addElement(array: shoppingCart, element: makeItem(name: "Converse", price: 140, quantity: 10))
     calculateCartTotal()
+    shoppingCart = blackFridayPromotionSafe(cart: shoppingCart)
     
+    
+    
+}
+
+//MARK: 방어적 복사
+func blackFridayPromotionSafe(cart: [Item]) -> [Item] {
+    var cartCopy = shoppingCart
+    blackFridayPromotion(shoppingCart)
+    return cartCopy
 }
 
 // cart의 구조만 알고 있는 함수..? 흠
@@ -155,3 +165,38 @@ func setQuantityByName(cart: [Item], name: String, quantity: Int) -> [Item] {
 }
 
 
+
+
+
+
+
+func blackFridayPromotion(_ shoppingCart: [Item]) {
+    
+}
+
+
+//MARK: 반복문을 isInCart 함수로 빼서, freeTieClip 함수의 추상화 계층의 단계를 비슷하게 맞춤
+
+func freeTieClip(cart: [Item]) -> [Item] {
+    var newCart = cart
+    var hasTie = isInCart(cart: newCart, name: "tie")
+    var hasTieClip = isInCart(cart: newCart, name: "tie Clip")
+    
+    
+    if hasTie && !hasTieClip {
+        var tieClip = makeItem(name: "tie Clip", price: 0, quantity: 1)
+        newCart = addItem(cart: newCart, item: tieClip)
+    }
+    
+    return newCart
+}
+
+func isInCart(cart: [Item], name: String) -> Bool {
+    for i in 0..<cart.count {
+        var item = cart[i]
+        if item.name == name {
+            return true
+        }
+    }
+    return false
+}
