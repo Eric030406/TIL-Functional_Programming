@@ -27,48 +27,16 @@ func blackFridayPromotionSafe(cart: [Item]) -> [Item] {
     return cartCopy
 }
 
-// cart의 구조만 알고 있는 함수..? 흠
-func addItem(cart: [Item], item: Item) -> [Item] {
-    return addElement(array: cart, element: item)
-}
 
-// addItem 함수에서 일반적으로 사용할 수 있는 유틸리티 함수를 추출. 어느 배열에서나 사용할 수 있다.
-func addElement<T>(array: [T], element: T) -> [T] {
-    var newArray = array
-    newArray.append(element)
-    
-    return newArray
-}
 
-func removeItemByName(cart: [Item], name: String) -> [Item] {
-    
-    for i in 0..<cart.count {
-        if cart[i].name == name {
-            return removeItems(array: cart, index: i)
-        }
-    }
-    
-    return cart
-}
 
-func removeItems(array: [Item], index: Int) -> [Item] {
-    var copy = array
-    copy.remove(at: index)
-    
-    return copy
-}
 
-// Item의 구조만 알고 있는 함수
-func makeItem(name: String, price: Double, quantity: Int) -> Item {
-    return Item(name: name, price: price, quantity: quantity)
-}
 
-// shoppingCartTotal 전역변수를 수정하기 때문에 액션이다.
-func calculateCartTotal() {
-    shoppingCartTotal = calculateItemTotal(cart: shoppingCart)
-    changeButton(cart: shoppingCart)
-    addTaxPrice()
-}
+
+
+
+
+
     
 // 지역변수 값을 수정하고 리턴하고 있다. 전역변수를 읽거나 수정하는게 없기 때문에 계산이다.
 func calculateItemTotal(cart: [Item]) -> Double {
@@ -91,14 +59,9 @@ func changeButton(cart: [Item]) {
 }
 
 // 인자값을 이용한 bool 값을 리턴하고 있다. 계산이다.
-func decideFreeShipping(cart: [Item]) -> Bool {
-    return calculateItemTotal(cart: cart) >= 20
-}
 
-// shoppingCartTotal 전역변수를 수정하기 때문에 액션이다.
-func addTaxPrice() {
-    shoppingCartTotal += calculateTax(total: shoppingCartTotal)
-}
+
+
 
 // 지역변수에 인자값을 할당해서 연산한 값을 리턴하고 있기 때문에 계산이다.
 func calculateTax(total: Double) -> Double {
@@ -141,9 +104,6 @@ func objectDelete(_ object: [Item], key: String) -> [Item] {
     return copy
 }
 
-func setPrice(item: [Item], newPrice: Double) -> [Item] {
-    return objectSet(item, key: "T-shirt", value: newPrice)
-}
 
 
 let shopping = [Item(name: "shoes", price: 10, quantity: 3),
@@ -191,12 +151,83 @@ func freeTieClip(cart: [Item]) -> [Item] {
     return newCart
 }
 
+func decideFreeShipping(cart: [Item]) -> Bool {
+    return calculateItemTotal(cart: cart) >= 20
+}
+
+// shoppingCartTotal 전역변수를 수정하기 때문에 액션이다.
+func addTaxPrice() {
+    shoppingCartTotal += calculateTax(total: shoppingCartTotal)
+}
+
+
+
+
+
+// cart의 구조만 알고 있는 함수..? 흠
+func addItem(cart: [Item], item: Item) -> [Item] {
+    return addElement(array: cart, element: item)
+}
+
+// MARK: isInCart 함수가 반복문과 array index같은 낮은 계층의 기능을 사용했었는데, indexOfItem 함수로 계층을 명확히 함
 func isInCart(cart: [Item], name: String) -> Bool {
+    return indexOfItem(cart: cart, name: name) != nil
+}
+
+// shoppingCartTotal 전역변수를 수정하기 때문에 액션이다.
+func calculateCartTotal() {
+    shoppingCartTotal = calculateItemTotal(cart: shoppingCart)
+    changeButton(cart: shoppingCart)
+    addTaxPrice()
+}
+
+
+// MARK: 함수에서 사용되는 다른 함수나 기능들의 계층을 맞춰주기 위해 반복문을 indexOfItem 함수로 뺌
+func removeItemByName(cart: [Item], name: String) -> [Item] {
+    var index: Int? = indexOfItem(cart: cart, name: name)
+    var newCart = cart
+    
+    if index != nil {
+        newCart = removeItems(array: newCart, index: index!)
+        return newCart
+    }
+    
+    return newCart
+}
+
+func indexOfItem(cart: [Item], name: String) -> Int? {
     for i in 0..<cart.count {
-        var item = cart[i]
-        if item.name == name {
-            return true
+        if cart[i].name == name {
+            return i
         }
     }
-    return false
+    return nil
+}
+
+
+
+
+// Item의 구조만 알고 있는 함수
+func makeItem(name: String, price: Double, quantity: Int) -> Item {
+    return Item(name: name, price: price, quantity: quantity)
+}
+
+func setPrice(item: [Item], newPrice: Double) -> [Item] {
+    return objectSet(item, key: "T-shirt", value: newPrice)
+}
+
+
+func removeItems(array: [Item], index: Int) -> [Item] {
+    var copy = array
+    copy.remove(at: index)
+    
+    return copy
+}
+
+// addItem 함수에서 일반적으로 사용할 수 있는 유틸리티 함수를 추출. 어느 배열에서나 사용할 수 있다.
+func addElement<T>(array: [T], element: T) -> [T] {
+    var newArray = array
+    newArray.append(element)
+    
+    return newArray
 }
