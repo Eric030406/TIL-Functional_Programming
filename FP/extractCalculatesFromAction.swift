@@ -181,12 +181,52 @@ func calculateCartTotal() {
     addTaxPrice()
 }
 
+
+
 //추상화 벽 위 계층에서 추상화 벽 계층의 함수를 써서, 코드를 구현.
 func getsWatchDiscount(cart: [Item]) -> Bool {
     var total = calculateItemTotal(cart: shoppingCart)
     var hasWatch = isInCart(cart: shoppingCart, name: "Watch")
     
     return total > 100 && hasWatch
+}
+
+// MARK: 고차함수를 통해서 비슷한 함수 리팩토링
+func operateOnArray(array: [String], act: (String) -> ()) {
+    var newArray = array
+    for i in 0..<newArray.count {
+        var indice = newArray[i]
+        act(indice)
+    }
+}
+
+func cookAndEat(_ food: String) {
+    cook(food)
+    eat(food)
+}
+
+func clean(_ dish: String) {
+    wash(dish)
+    dry(dish)
+    putAway(dish)
+}
+
+func cook(_ food: String) {
+    
+}
+
+func eat(_ food: String) {
+    
+}
+
+func wash(_ dish: String) {
+    
+}
+func dry(_ dish: String) {
+    
+}
+func putAway(_ dish: String) {
+    
 }
 
 // MARK: 함수에서 사용되는 다른 함수나 기능들의 계층을 맞춰주기 위해 반복문을 indexOfItem 함수로 뺌
