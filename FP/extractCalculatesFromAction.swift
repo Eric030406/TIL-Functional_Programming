@@ -23,7 +23,7 @@ func addItemToCart(item: Item) {
 //MARK: 방어적 복사
 func blackFridayPromotionSafe(cart: [Item]) -> [Item] {
     var cartCopy = shoppingCart
-    blackFridayPromotion(shoppingCart)
+    blackFridayPromotion(cartCopy)
     return cartCopy
 }
 
@@ -181,6 +181,13 @@ func calculateCartTotal() {
     addTaxPrice()
 }
 
+//추상화 벽 위 계층에서 추상화 벽 계층의 함수를 써서, 코드를 구현.
+func getsWatchDiscount(cart: [Item]) -> Bool {
+    var total = calculateItemTotal(cart: shoppingCart)
+    var hasWatch = isInCart(cart: shoppingCart, name: "Watch")
+    
+    return total > 100 && hasWatch
+}
 
 // MARK: 함수에서 사용되는 다른 함수나 기능들의 계층을 맞춰주기 위해 반복문을 indexOfItem 함수로 뺌
 func removeItemByName(cart: [Item], name: String) -> [Item] {
@@ -231,3 +238,5 @@ func addElement<T>(array: [T], element: T) -> [T] {
     
     return newArray
 }
+
+
